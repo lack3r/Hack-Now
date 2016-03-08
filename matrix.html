@@ -1,0 +1,92 @@
+<style>
+
+/*Reset*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #000000;
+    overflow: hidden;
+}
+canvas {
+    display: block;
+}
+/*This is for the Youtube player*/
+/*Add some opacity to increase the magic*/
+#Player {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -315px;
+    margin-left: -210px;
+    text-align: center;
+    padding-top: 157px;
+    opacity: 0.8;
+}
+</style>
+<div>
+    <canvas id="matrixBack"></canvas>
+</div>
+<div id="Player">
+    <iframe width="420" height="315" src="https://www.youtube.com/embed/pmxYePDPV6M?autoplay=1&autohide=1&autoplay=1&iv_load_policy=3&loop=1" frameborder="0" allowfullscreen></iframe>
+    </iframe>
+</div>
+<script>
+/*Get a Katakana unicode character */
+/*http://symbolcodes.tlt.psu.edu/bylanguage/japanesechartkatakana.html*/
+function getRandomSymbol() {
+    return String.fromCharCode(0x30A0 + Math.random() * (0x30FF - 0x30A0 + 1));
+}
+
+//lack3r Disclaimer: I initially used some code from http://thecodeplayer.com/walkthrough/matrix-rain-animation-html5-canvas-javascript
+
+var canvas = document.getElementById("matrixBack");
+var context = canvas.getContext("2d");
+
+/*Get the size of the screen*/
+canvas.height = screen.height;
+canvas.width = screen.width;
+
+var font_size = 14;
+/*Calculate No of Columns*/
+var columns = canvas.width / font_size;
+/*an array of letters, one for each column*/
+var drops = [];
+/* coordinates of the drops*/
+/* Randomize the y coordinates of the drops*/
+for (var x = 0; x < columns; x++)
+    drops[x] = -1 * Math.floor(Math.random() * columns);
+
+/*Make it rain!!! Whoohoo*/
+function draw() {
+    /*Fill the canvas with black and add a little bit opacity to show the letters trail*/
+    context.fillStyle = "rgba(0, 0, 0, 0.15)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    /*fill with green!*/
+    context.fillStyle = "#0F0";
+    /*define the font as arial*/
+    context.font = font_size + "px arial";
+    /*continuous looping*/
+    for (var i = 0; i < drops.length; i++) {
+        /*Get a random Symbol*/
+        var text = getRandomSymbol();
+        var x = i * font_size;
+        var y = drops[i] * font_size;
+        /*Fill with text the coordinate x,y*/
+        context.fillText(text,x, y);
+
+
+       /*After the drop exits, sent it back to the start*/
+        if (drops[i] * font_size > canvas.height && Math.random() > 0.980)
+            drops[i] = 0;
+
+        drops[i] ++;
+
+    }
+}
+
+/*Call this function repeatedly*/
+setInterval(draw, 45);
+</script>
